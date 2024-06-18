@@ -107,6 +107,7 @@ namespace MapHazardsMoves
             Harmony.CreateAndPatchAll(typeof(LandminePatch));
             Harmony.CreateAndPatchAll(typeof(SpikeRoofTrapPatch));
             Harmony.CreateAndPatchAll(typeof(TurretPatch));
+            Harmony.CreateAndPatchAll(typeof(RoundManagerPatch));
             Logger.LogInfo($"MapHazardsMoves is patched!");
         }
 
@@ -124,8 +125,8 @@ namespace MapHazardsMoves
             var rx = Random.Range(min, max);
             var rz = Random.Range(min, max);
 
-            if (Random.Range(0, 1) == 1) rx *= -1;
-            if (Random.Range(0, 1) == 1) rz *= -1;
+            if (Random.Range(0, 2) == 1) rx *= -1;
+            if (Random.Range(0, 2) == 1) rz *= -1;
 
             return pos + new Vector3(rx, 0, rz);
         }
