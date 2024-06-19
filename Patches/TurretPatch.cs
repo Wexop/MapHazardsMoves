@@ -21,8 +21,8 @@ namespace MapHazardsMoves.Patches
         private static void UpdatePatch(Turret __instance)
         {
             if(!__instance.IsServer || !MapHazardsMoves.instance.turretEnabledEntry.Value) return;
-            
             HazardObject hazardObject = MapHazardsMoves.instance.HazardsObjects[__instance.NetworkObjectId];
+            
 
 
             if(hazardObject == null) return;
@@ -31,7 +31,7 @@ namespace MapHazardsMoves.Patches
             {
                 hazardObject.detectPlayerTimer -= Time.deltaTime;
             }
-
+            
             if (hazardObject.moveTimer > 0)
             {
                 hazardObject.moveTimer -= Time.deltaTime;
@@ -39,6 +39,8 @@ namespace MapHazardsMoves.Patches
             else
             {
                 hazardObject.moveTimer = MapHazardsMoves.instance.GetNewTimer();
+                //Debug.Log("TURRET MOVE");
+                //Debug.Log($"ID {__instance.NetworkObjectId} new pos {MapHazardsMoves.instance.GetNewPos(__instance.transform.position)} speed {MapHazardsMoves.instance.turretSpeedEntry.Value}");
                 NetworkHazardsMoves.OnUpdateObjectClientRpc(
                     __instance.NetworkObjectId, 
                     MapHazardsMoves.instance.GetNewPos(__instance.transform.position),
