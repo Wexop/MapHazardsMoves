@@ -27,6 +27,10 @@ namespace MapHazardsMoves.Patches
 
             if(hazardObject == null) return;
             
+            if (hazardObject.detectPlayerTimer > 0)
+            {
+                hazardObject.detectPlayerTimer -= Time.deltaTime;
+            }
 
             if (hazardObject.moveTimer > 0)
             {

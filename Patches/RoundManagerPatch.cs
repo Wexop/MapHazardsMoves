@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using UnityEngine;
 
 namespace MapHazardsMoves.Patches;
 
@@ -10,5 +11,6 @@ public class RoundManagerPatch
     private static void LoadLevelPatch(RoundManager __instance)
     {
         MapHazardsMoves.instance.HazardsObjects.Clear();
+        if(MapHazardsMoves.instance.enableDevLogsEntry.Value) Debug.Log("MAP HAZARDS OBJECTS CLEANED");
     }
 }

@@ -40,8 +40,15 @@ namespace MapHazardsMoves
         
         public ConfigEntry<float> spikeTrapSpeedEntry;
         public ConfigEntry<bool> spikeTrapEnabledEntry;
+        
+        public ConfigEntry<bool> enablePlayerDetectionEntry;
+        public ConfigEntry<float> playerDetectionSpeedEntry;
+        public ConfigEntry<float> playerDetectionDelayEntry;
+        public ConfigEntry<float> playerDetectionDistanceEntry;
 
         public ConfigEntry<bool> enableDevLogsEntry;
+        
+
 
         void Awake()
         {
@@ -98,6 +105,24 @@ namespace MapHazardsMoves
             spikeTrapSpeedEntry = Config.Bind("SpikeTrap", "spikeTrapSpeed", 4f,
                 "Spike traps movement speed. No need to restart the game :)");
             CreateFloatConfig(spikeTrapSpeedEntry, 1f, 100f);
+            
+            //PLAYER DETECTION
+            enablePlayerDetectionEntry = Config.Bind("PlayerDetection", "EnablePlayerDetection", false,
+                "Enable hazards to detect a player and run into it. No need to restart the game :)");
+            CreateBoolConfig(enablePlayerDetectionEntry);
+            
+            playerDetectionSpeedEntry = Config.Bind("PlayerDetection", "playerDetectionSpeed", 8f,
+                "Speed of hazards when they run into a player. No need to restart the game :)");
+            CreateFloatConfig(playerDetectionSpeedEntry, 1f, 100f);
+            
+            playerDetectionDelayEntry = Config.Bind("PlayerDetection", "playerDetectionDelay", 20f,
+                "Delay before an hazard can detect a player again. No need to restart the game :)");
+            CreateFloatConfig(playerDetectionDelayEntry, 1f, 180f);
+            
+            playerDetectionDistanceEntry = Config.Bind("PlayerDetection", "playerDetectionDistance", 8f,
+                "Distance of the player detection. No need to restart the game :)");
+            CreateFloatConfig(playerDetectionDistanceEntry, 1f, 100f);
+            
             
             //DEV
             enableDevLogsEntry = Config.Bind("Dev", "enableLogs", false,
