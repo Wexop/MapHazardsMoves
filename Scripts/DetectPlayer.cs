@@ -7,18 +7,18 @@ namespace MapHazardsMoves.Scripts;
 
 public class DetectPlayer: MonoBehaviour
 {
-    public ulong networkId;
+    public ulong? networkId = null;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && networkId != null && other.gameObject.transform.position != null)
+        if (other.CompareTag("Player") && networkId.HasValue && other.gameObject.transform.position != null)
         {
             if (NetworkManager.Singleton.IsServer)
             {
-                NetworkHazardsMoves.OnPlayerDetected(networkId, other.gameObject.transform.position);
+                NetworkHazardsMoves.OnPlayerDetected(networkId.Value, other.gameObject.transform.position);
             }
             else
             {
-                NetworkHazardsMoves.OnPlayerDetectedServerRpc(networkId, other.gameObject.transform.position);
+                NetworkHazardsMoves.OnPlayerDetectedServerRpc(networkId.Value, other.gameObject.transform.position);
             }
         }
     }

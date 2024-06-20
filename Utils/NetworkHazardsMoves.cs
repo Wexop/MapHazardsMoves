@@ -54,8 +54,16 @@ namespace MapHazardsMoves.Utils
         [ClientRpc]
         public static void OnUpdateObjectClientRpc(ulong networkId, Vector3 newPos, float speed)
         {
+            
+            Debug.Log("ON UPDATE IS CALLED");
 
-            if(newPos == null) return;
+            if(newPos == null || networkId == null || speed == null) return;
+            
+            if (!MapHazardsMoves.instance.HazardsObjects.ContainsKey(networkId))
+            {
+                Debug.LogError($"No HazardObject found with networkId {networkId}");
+                return;
+            }
             
             HazardObject hazardObject = MapHazardsMoves.instance.HazardsObjects[networkId];
 
@@ -76,9 +84,15 @@ namespace MapHazardsMoves.Utils
         public static void OnPlayerDetected(ulong networkId, Vector3 newPos)
         {
             
-            Debug.Log($"PLAYER DETECTED WITH id {networkId} pos: {newPos}");
+            if(MapHazardsMoves.instance.enableDevLogsEntry.Value) Debug.Log($"PLAYER DETECTED WITH id {networkId} pos: {newPos}");
             
             if(newPos == null || !MapHazardsMoves.instance.enablePlayerDetectionEntry.Value || networkId == null) return;
+            
+            if (!MapHazardsMoves.instance.HazardsObjects.ContainsKey(networkId))
+            {
+                Debug.LogError($"No HazardObject found with networkId {networkId}");
+                return;
+            }
             
             HazardObject hazardObject = MapHazardsMoves.instance.HazardsObjects[networkId];
             

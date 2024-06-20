@@ -155,6 +155,61 @@ namespace MapHazardsMoves
 
             return pos + new Vector3(rx, 0, rz);
         }
+
+        public void OnUpdateHazardObject(ulong networkId, float speed, Vector3 position)
+        {
+            if (!instance.HazardsObjects.ContainsKey(networkId))
+            {
+                if(enableDevLogsEntry.Value) Debug.LogError($"No HazardObject found with networkId {networkId}");
+                return;
+            }
+    
+            HazardObject hazardObject = instance.HazardsObjects[networkId];
+
+            if (hazardObject == null)
+            {
+                if(enableDevLogsEntry.Value) Debug.LogError($"HazardObject is null for networkId {networkId}");
+                return;
+            }
+    
+            if (hazardObject.detectPlayerTimer > 0)
+            {
+                hazardObject.detectPlayerTimer -= Time.deltaTime;
+            }
+    
+            if (hazardObject.moveTimer > 0)
+            {
+                hazardObject.moveTimer -= Time.deltaTime;
+            }
+            else
+            {
+                if(position == null)
+                {
+                    if(enableDevLogsEntry.Value) Debug.LogError($"Position is null for networkId {networkId}");
+                    return;
+                }
+
+                Vector3 pos = position;
+        
+                hazardObject.moveTimer = instance.GetNewTimer();
+                //Debug.Log("HAZARD MOVE");
+                //Debug.Log($"ID {networkId} new pos {instance.GetNewPos(position)} speed {speed}");
+
+                Vector3 newPos = instance.GetNewPos(pos);
+                if(newPos == null)
+                {
+                    if(enableDevLogsEntry.Value) Debug.LogError($"New position calculated is null for networkId {networkId}");
+                    return;
+                }
+
+                NetworkHazardsMoves.OnUpdateObjectClientRpc(
+                    networkId, 
+                    newPos,
+                    speed
+                );
+            }
+        }
+
         
         private void CreateFloatConfig(ConfigEntry<float> configEntry, float min = 0f, float max = 30f)
         {

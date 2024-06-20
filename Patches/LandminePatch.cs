@@ -21,31 +21,11 @@ namespace MapHazardsMoves.Patches
         [HarmonyPostfix]
         private static void UpdatePatch(Landmine __instance)
         {
-            if(!__instance.IsServer || __instance.hasExploded || !MapHazardsMoves.instance.landmineEnabledEntry.Value) return;
+            if(__instance.NetworkObjectId == null) return;
+            if(!__instance.IsServer || !MapHazardsMoves.instance.landmineEnabledEntry.Value) return;
             
-            HazardObject hazardObject = MapHazardsMoves.instance.HazardsObjects[__instance.NetworkObjectId];
+            MapHazardsMoves.instance.OnUpdateHazardObject(__instance.NetworkObjectId, MapHazardsMoves.instance.landmineSpeedEntry.Value, __instance.gameObject.transform.position);
 
-
-            if(hazardObject == null) return;
-            
-            if (hazardObject.detectPlayerTimer > 0)
-            {
-                hazardObject.detectPlayerTimer -= Time.deltaTime;
-            }
-
-            if (hazardObject.moveTimer > 0)
-            {
-                hazardObject.moveTimer -= Time.deltaTime;
-            }
-            else
-            {
-                hazardObject.moveTimer = MapHazardsMoves.instance.GetNewTimer();
-                NetworkHazardsMoves.OnUpdateObjectClientRpc(
-                    __instance.NetworkObjectId, 
-                    MapHazardsMoves.instance.GetNewPos(__instance.transform.position),
-                    MapHazardsMoves.instance.landmineSpeedEntry.Value
-                );
-            }
 
 
         }
