@@ -12,13 +12,10 @@ public class DetectPlayer: MonoBehaviour
     {
         if (other.CompareTag("Player") && networkId.HasValue && other.gameObject.transform.position != null)
         {
+            //Debug.Log($"PLAYER TRIGGER, IS SERVER {NetworkManager.Singleton.IsServer}, NETWORKID {networkId.Value}, NEW POS {other.gameObject.transform.position}");
             if (NetworkManager.Singleton.IsServer)
             {
                 NetworkHazardsMoves.OnPlayerDetected(networkId.Value, other.gameObject.transform.position);
-            }
-            else
-            {
-                NetworkHazardsMoves.OnPlayerDetectedServerRpc(networkId.Value, other.gameObject.transform.position);
             }
         }
     }

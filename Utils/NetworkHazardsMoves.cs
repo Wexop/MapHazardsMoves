@@ -54,7 +54,7 @@ namespace MapHazardsMoves.Utils
         [ClientRpc]
         public static void OnUpdateObjectClientRpc(ulong networkId, Vector3 newPos, float speed)
         {
-            Debug.Log("ON UPDATE IS CALLED");
+            //Debug.Log("ON UPDATE IS CALLED");
             //Debug.Log($"ON UPDATE IS CALLED WITH ID {networkId} newPos {newPos} speed {speed}");
             //Debug.Log($"MAP HAZRADS DICT {MapHazardsMoves.instance.HazardsObjects}");
             //Debug.Log($"CONTAINS KEY {MapHazardsMoves.instance.HazardsObjects?.ContainsKey(networkId)}");
@@ -78,12 +78,6 @@ namespace MapHazardsMoves.Utils
 
             if(MapHazardsMoves.instance.enableDevLogsEntry.Value) Debug.Log($"HAZARD MOVED {hazardObject.gameObject.name}");
         }
-
-        [ServerRpc]
-        public static void OnPlayerDetectedServerRpc(ulong networkId, Vector3 newPos)
-        {
-            OnPlayerDetected(networkId, newPos);
-        }
         
         public static void OnPlayerDetected(ulong networkId, Vector3 newPos)
         {
@@ -103,6 +97,7 @@ namespace MapHazardsMoves.Utils
             if(hazardObject == null || hazardObject.detectPlayerTimer > 0) return;
 
             hazardObject.detectPlayerTimer = MapHazardsMoves.instance.playerDetectionDelayEntry.Value;
+            hazardObject.moveTimer = MapHazardsMoves.instance.GetNewTimer();
             OnUpdateObjectClientRpc(networkId, newPos, MapHazardsMoves.instance.playerDetectionSpeedEntry.Value);
             
             if(MapHazardsMoves.instance.enableDevLogsEntry.Value) Debug.Log($"HAZARD DETECTED PLAYER {hazardObject.gameObject.name}");

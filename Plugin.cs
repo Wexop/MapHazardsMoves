@@ -204,9 +204,9 @@ namespace MapHazardsMoves
                 }
                 
                 
-                Debug.Log($"ON UPDATE IS CALLED WITH ID {networkId} newPos {newPos} speed {speed}");
-                Debug.Log($"MAP HAZRADS DICT {MapHazardsMoves.instance.HazardsObjects.ToList().ToString()}");
-                Debug.Log($"CONTAINS KEY {MapHazardsMoves.instance.HazardsObjects?.ContainsKey(networkId)}");
+                //Debug.Log($"ON UPDATE IS CALLED WITH ID {networkId} newPos {newPos} speed {speed}");
+                //Debug.Log($"MAP HAZRADS DICT {MapHazardsMoves.instance.HazardsObjects.Values}");
+                //Debug.Log($"CONTAINS KEY {MapHazardsMoves.instance.HazardsObjects?.ContainsKey(networkId)}");
 
                 NetworkHazardsMoves.OnUpdateObjectClientRpc(
                     networkId, 
