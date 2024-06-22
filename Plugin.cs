@@ -21,7 +21,7 @@ namespace MapHazardsMoves
 
         const string GUID = "wexop.maphazardsmoves";
         const string NAME = "MapHazardsMoves";
-        const string VERSION = "1.0.0";
+        const string VERSION = "1.0.1";
 
         public static MapHazardsMoves instance;
 
