@@ -26,6 +26,8 @@ namespace MapHazardsMoves
         public static MapHazardsMoves instance;
 
         public Dictionary<ulong, HazardObject> HazardsObjects = new Dictionary<ulong, HazardObject>();
+
+        public ConfigEntry<float> randomPercentChanceEntry;
         
         public ConfigEntry<float> minMovementDistanceEntry;
         public ConfigEntry<float> maxMovementDistanceEntry;
@@ -60,6 +62,10 @@ namespace MapHazardsMoves
             //CONFIGS
             
             //GENERAL
+            
+            randomPercentChanceEntry = Config.Bind("General", "ChanceOfMovement", 100f,
+                "The chance for a map hazard to be able to walk. 0% is never, 100% is always. No need to restart the game :)");
+            CreateFloatConfig(randomPercentChanceEntry, 0f, 100f);
             
             minMovementDistanceEntry = Config.Bind("General", "minMovementDistance", 5f,
                 "The minimum distance that hazard can walk to. No need to restart the game :)");
@@ -137,6 +143,16 @@ namespace MapHazardsMoves
             Logger.LogInfo($"MapHazardsMoves is patched!");
         }
 
+        public void RegisterHazardObject(ulong networkId)
+        {
+            if (networkId == null) return;
+
+            var random = Random.Range(0f, 100f);
+            bool canWalk = !(randomPercentChanceEntry.Value < random);
+            
+            NetworkHazardsMoves.RegisterObjectClientRpc(networkId, canWalk);
+        }
+
         public float GetNewTimer()
         {
             return Random.Range(minMovementDelayEntry.Value, maxMovementDelayEntry.Value);
@@ -172,6 +188,8 @@ namespace MapHazardsMoves
                 if(enableDevLogsEntry.Value) Debug.LogError($"HazardObject is null for networkId {networkId}");
                 return;
             }
+            
+            if(!hazardObject.canWalk) return;
     
             if (hazardObject.detectPlayerTimer > 0)
             {

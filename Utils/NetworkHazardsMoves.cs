@@ -14,7 +14,7 @@ namespace MapHazardsMoves.Utils
     public class NetworkHazardsMoves
     { 
         [ClientRpc]
-        public static void RegisterObjectClientRpc(ulong networkID)
+        public static void RegisterObjectClientRpc(ulong networkID, bool canWalk)
         {
             var gameobjects = Object.FindObjectsByType<NetworkObject>(FindObjectsSortMode.None).ToList();
             var objectFound = gameobjects.Find(e => e.NetworkObjectId == networkID);
@@ -33,6 +33,7 @@ namespace MapHazardsMoves.Utils
                 sphereCollider.isTrigger = true;
 
                 HazardObject hazardObject = new HazardObject();
+                hazardObject.canWalk = canWalk;
                 hazardObject.gameObject = objectFound.gameObject;
                 hazardObject.moveTimer = 0;
                 hazardObject.detectPlayerTimer = 0;
@@ -46,7 +47,7 @@ namespace MapHazardsMoves.Utils
                 
                 MapHazardsMoves.instance.HazardsObjects.Add(networkID, hazardObject);
 
-                if(MapHazardsMoves.instance.enableDevLogsEntry.Value) Debug.Log($"OBJECT ADDED {objectFound.name} WITH ID {networkID}");
+                if(MapHazardsMoves.instance.enableDevLogsEntry.Value) Debug.Log($"OBJECT ADDED {objectFound.name} WITH ID {networkID} CAN WALK {canWalk}");
             }
             
         }
@@ -69,7 +70,7 @@ namespace MapHazardsMoves.Utils
             
             HazardObject hazardObject = MapHazardsMoves.instance.HazardsObjects[networkId];
 
-            if(hazardObject == null) return;
+            if(hazardObject == null || !hazardObject.canWalk) return;
             
             if(hazardObject.navMeshAgent == null) return;
             

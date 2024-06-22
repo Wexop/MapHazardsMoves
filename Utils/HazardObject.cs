@@ -8,6 +8,7 @@ namespace MapHazardsMoves.Utils
 {
     public class HazardObject
     {
+        public bool canWalk;
         public GameObject gameObject;
         public NavMeshAgent navMeshAgent;
         public DetectPlayer detectPlayer;

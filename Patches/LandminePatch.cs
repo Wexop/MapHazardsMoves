@@ -14,7 +14,7 @@ namespace MapHazardsMoves.Patches
             
             if(!__instance.IsServer) return;
             
-            NetworkHazardsMoves.RegisterObjectClientRpc(__instance.NetworkObjectId);
+            MapHazardsMoves.instance.RegisterHazardObject(__instance.NetworkObjectId);
         }
         
         [HarmonyPatch("Update")]
