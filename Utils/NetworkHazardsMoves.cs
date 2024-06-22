@@ -26,8 +26,8 @@ namespace MapHazardsMoves.Utils
             else
             {
 
-                objectFound.gameObject.AddComponent<NavMeshAgent>();
-                objectFound.gameObject.AddComponent<DetectPlayer>();
+                NavMeshAgent navMeshAgent = objectFound.gameObject.AddComponent<NavMeshAgent>();
+                DetectPlayer detectPlayer = objectFound.gameObject.AddComponent<DetectPlayer>();
                 SphereCollider sphereCollider = objectFound.gameObject.AddComponent<SphereCollider>();
                 sphereCollider.radius = MapHazardsMoves.instance.playerDetectionDistanceEntry.Value;
                 sphereCollider.isTrigger = true;
@@ -36,11 +36,11 @@ namespace MapHazardsMoves.Utils
                 hazardObject.gameObject = objectFound.gameObject;
                 hazardObject.moveTimer = 0;
                 hazardObject.detectPlayerTimer = 0;
-                hazardObject.navMeshAgent = objectFound.GetComponent<NavMeshAgent>();
+                hazardObject.navMeshAgent = navMeshAgent;
                 hazardObject.navMeshAgent.height = 3.3f;
                 hazardObject.navMeshAgent.radius = 1f;
 
-                hazardObject.detectPlayer = objectFound.GetComponent<DetectPlayer>();
+                hazardObject.detectPlayer = detectPlayer;
                 hazardObject.detectPlayer.networkId = networkID;
                 
                 
@@ -54,8 +54,10 @@ namespace MapHazardsMoves.Utils
         [ClientRpc]
         public static void OnUpdateObjectClientRpc(ulong networkId, Vector3 newPos, float speed)
         {
-            
             Debug.Log("ON UPDATE IS CALLED");
+            //Debug.Log($"ON UPDATE IS CALLED WITH ID {networkId} newPos {newPos} speed {speed}");
+            //Debug.Log($"MAP HAZRADS DICT {MapHazardsMoves.instance.HazardsObjects}");
+            //Debug.Log($"CONTAINS KEY {MapHazardsMoves.instance.HazardsObjects?.ContainsKey(networkId)}");
 
             if(newPos == null || networkId == null || speed == null) return;
             
@@ -68,6 +70,8 @@ namespace MapHazardsMoves.Utils
             HazardObject hazardObject = MapHazardsMoves.instance.HazardsObjects[networkId];
 
             if(hazardObject == null) return;
+            
+            if(hazardObject.navMeshAgent == null) return;
             
             hazardObject.navMeshAgent.speed = speed;
             hazardObject.navMeshAgent.SetDestination(newPos);

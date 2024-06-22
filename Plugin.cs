@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
 using HarmonyLib;
@@ -201,6 +202,11 @@ namespace MapHazardsMoves
                     if(enableDevLogsEntry.Value) Debug.LogError($"New position calculated is null for networkId {networkId}");
                     return;
                 }
+                
+                
+                Debug.Log($"ON UPDATE IS CALLED WITH ID {networkId} newPos {newPos} speed {speed}");
+                Debug.Log($"MAP HAZRADS DICT {MapHazardsMoves.instance.HazardsObjects.ToList().ToString()}");
+                Debug.Log($"CONTAINS KEY {MapHazardsMoves.instance.HazardsObjects?.ContainsKey(networkId)}");
 
                 NetworkHazardsMoves.OnUpdateObjectClientRpc(
                     networkId, 
