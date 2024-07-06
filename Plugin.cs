@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
@@ -21,7 +22,7 @@ namespace MapHazardsMoves
 
         const string GUID = "wexop.maphazardsmoves";
         const string NAME = "MapHazardsMoves";
-        const string VERSION = "1.0.1";
+        const string VERSION = "1.0.2";
 
         public static MapHazardsMoves instance;
 
@@ -48,6 +49,8 @@ namespace MapHazardsMoves
         public ConfigEntry<float> playerDetectionSpeedEntry;
         public ConfigEntry<float> playerDetectionDelayEntry;
         public ConfigEntry<float> playerDetectionDistanceEntry;
+        
+        public ConfigEntry<bool> enableCoilHeadModeEntry;
 
         public ConfigEntry<bool> enableDevLogsEntry;
         
@@ -130,6 +133,12 @@ namespace MapHazardsMoves
                 "Distance of the player detection. No need to restart the game :)");
             CreateFloatConfig(playerDetectionDistanceEntry, 1f, 100f);
             
+            //OTHER
+            
+            enableCoilHeadModeEntry = Config.Bind("Other", "CoilHeadMode", false,
+                "Hazards stop walking when a player look at it. No need to restart the game :)");
+            CreateBoolConfig(enableCoilHeadModeEntry);
+            
             
             //DEV
             enableDevLogsEntry = Config.Bind("Dev", "enableLogs", false,
@@ -190,7 +199,23 @@ namespace MapHazardsMoves
             }
             
             if(!hazardObject.canWalk) return;
-    
+            
+            //COIL HEAD MODE
+
+            bool isStopped = instance.CheckIfPlayerLook(hazardObject);
+            
+            if(hazardObject.isStopped != isStopped)
+            {
+                hazardObject.isStopped = isStopped;
+                NetworkHazardsMoves.ChangeHazardMovementStateClientRpc(networkId, isStopped);
+
+                if (isStopped)
+                {
+                    hazardObject.detectPlayerTimer = 0.5f;
+                    hazardObject.moveTimer = 0.5f;
+                }
+            }
+
             if (hazardObject.detectPlayerTimer > 0)
             {
                 hazardObject.detectPlayerTimer -= Time.deltaTime;
@@ -232,6 +257,31 @@ namespace MapHazardsMoves
                     speed
                 );
             }
+        }
+
+        public bool CheckIfPlayerLook(HazardObject hazardObject)
+        {
+
+            var isLooking = false;
+
+            if (!enableCoilHeadModeEntry.Value || hazardObject == null) return false;
+            
+            for (int i = 0; i < 4; i++)
+            {
+
+                if (StartOfRound.Instance.allPlayerScripts[i].HasLineOfSightToPosition(hazardObject.gameObject.transform.position + Vector3.up * 1.6f, 68f) && 
+                    Vector3.Distance(StartOfRound.Instance.allPlayerScripts[i].gameplayCamera.transform.position,
+                        hazardObject.gameObject.transform.position) > 0.3f)
+                {
+                    //Debug.Log("PLAYER IS LOOKING");
+                    hazardObject.navMeshAgent.isStopped = true;
+                    isLooking = true;
+                }
+
+            }
+
+            return isLooking;
+
         }
 
         

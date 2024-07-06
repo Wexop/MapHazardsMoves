@@ -14,6 +14,7 @@ namespace MapHazardsMoves.Utils
         public DetectPlayer detectPlayer;
         public float moveTimer;
         public float detectPlayerTimer;
+        public bool isStopped;
 
     }
 }

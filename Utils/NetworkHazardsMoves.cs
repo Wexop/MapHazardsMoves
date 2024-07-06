@@ -83,8 +83,6 @@ namespace MapHazardsMoves.Utils
         public static void OnPlayerDetected(ulong networkId, Vector3 newPos)
         {
             
-            if(MapHazardsMoves.instance.enableDevLogsEntry.Value) Debug.Log($"PLAYER DETECTED WITH id {networkId} pos: {newPos}");
-            
             if(newPos == null || !MapHazardsMoves.instance.enablePlayerDetectionEntry.Value || networkId == null) return;
             
             if (!MapHazardsMoves.instance.HazardsObjects.ContainsKey(networkId))
@@ -101,7 +99,27 @@ namespace MapHazardsMoves.Utils
             hazardObject.moveTimer = MapHazardsMoves.instance.GetNewTimer();
             OnUpdateObjectClientRpc(networkId, newPos, MapHazardsMoves.instance.playerDetectionSpeedEntry.Value);
             
-            if(MapHazardsMoves.instance.enableDevLogsEntry.Value) Debug.Log($"HAZARD DETECTED PLAYER {hazardObject.gameObject.name}");
+            if(MapHazardsMoves.instance.enableDevLogsEntry.Value) Debug.Log($"PLAYER DETECTED WITH id {networkId} pos: {newPos} FROM {hazardObject.gameObject.name}");
+        }
+
+        [ClientRpc]
+        public static void ChangeHazardMovementStateClientRpc(ulong networkId, bool active)
+        {
+            
+            if (!MapHazardsMoves.instance.HazardsObjects.ContainsKey(networkId))
+            {
+                Debug.LogError($"No HazardObject found with networkId {networkId}");
+                return;
+            }
+            HazardObject hazardObject = MapHazardsMoves.instance.HazardsObjects[networkId];
+            
+            if(hazardObject == null) return;
+
+            hazardObject.navMeshAgent.isStopped = active;
+            
+            if(MapHazardsMoves.instance.enableDevLogsEntry.Value) Debug.Log($"HAZARD MOVEMENT STATE UPDATED TO {active} FOR {hazardObject.gameObject.name}");
+
+
         }
         
     }

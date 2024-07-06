@@ -8,7 +8,7 @@ namespace MapHazardsMoves.Scripts;
 public class DetectPlayer: MonoBehaviour
 {
     public ulong? networkId = null;
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player") && networkId.HasValue && other.gameObject.transform.position != null)
         {

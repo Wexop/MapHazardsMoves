@@ -1,6 +1,6 @@
 {
   "name": "MapHazardsMoves",
-  "version_number": "1.0.1",
+  "version_number": "1.0.2",
   "website_url": "https://github.com/Wexop/MapHazardsMoves",
   "description": "[V50] Map hazards like turrets, landmines and spike traps now move in the factory ! It can also chase you, be careful... Configurable :)",
   "dependencies": [
