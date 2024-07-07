@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.0.2
+
+- New coilHeadMode config, hazards will stop walking when a player look at it ! Enable PlayerDetection to have a behavior like coil heads :)
+
 ### v1.0.1
 
 - You can config the chance for a map hazard to being able to move, 0% is never 100% is always

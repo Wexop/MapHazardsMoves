@@ -136,7 +136,7 @@ namespace MapHazardsMoves
             //OTHER
             
             enableCoilHeadModeEntry = Config.Bind("Other", "CoilHeadMode", false,
-                "Hazards stop walking when a player look at it. No need to restart the game :)");
+                "Hazards stop walking when a player look at it. To have a behavior like coil heads, you can enable playerDetection !  No need to restart the game :)");
             CreateBoolConfig(enableCoilHeadModeEntry);
             
             
