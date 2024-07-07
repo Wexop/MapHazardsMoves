@@ -152,14 +152,14 @@ namespace MapHazardsMoves
             Logger.LogInfo($"MapHazardsMoves is patched!");
         }
 
-        public void RegisterHazardObject(ulong networkId)
+        public void RegisterHazardObject(ulong networkId, MapHazardTypes mapHazardType = MapHazardTypes.Other)
         {
             if (networkId == null) return;
 
             var random = Random.Range(0f, 100f);
             bool canWalk = !(randomPercentChanceEntry.Value < random);
             
-            NetworkHazardsMoves.RegisterObjectClientRpc(networkId, canWalk);
+            NetworkHazardsMoves.RegisterObjectClientRpc(networkId, canWalk, mapHazardType);
         }
 
         public float GetNewTimer()
@@ -269,7 +269,7 @@ namespace MapHazardsMoves
             for (int i = 0; i < 4; i++)
             {
 
-                if (StartOfRound.Instance.allPlayerScripts[i].HasLineOfSightToPosition(hazardObject.gameObject.transform.position + Vector3.up * 1.6f, 68f) && 
+                if (StartOfRound.Instance.allPlayerScripts[i].HasLineOfSightToPosition(hazardObject.GetCenterPosition(), 68f) && 
                     Vector3.Distance(StartOfRound.Instance.allPlayerScripts[i].gameplayCamera.transform.position,
                         hazardObject.gameObject.transform.position) > 0.3f)
                 {

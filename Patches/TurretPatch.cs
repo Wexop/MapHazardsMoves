@@ -13,7 +13,7 @@ namespace MapHazardsMoves.Patches
         {
             if(!__instance.IsServer) return;
 
-            MapHazardsMoves.instance.RegisterHazardObject(__instance.NetworkObjectId);
+            MapHazardsMoves.instance.RegisterHazardObject(__instance.NetworkObjectId, MapHazardTypes.Turret);
         }
         
         [HarmonyPatch("Update")]

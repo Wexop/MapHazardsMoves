@@ -14,7 +14,7 @@ namespace MapHazardsMoves.Utils
     public class NetworkHazardsMoves
     { 
         [ClientRpc]
-        public static void RegisterObjectClientRpc(ulong networkID, bool canWalk)
+        public static void RegisterObjectClientRpc(ulong networkID, bool canWalk, MapHazardTypes mapHazardType = MapHazardTypes.Other)
         {
             var gameobjects = Object.FindObjectsByType<NetworkObject>(FindObjectsSortMode.None).ToList();
             var objectFound = gameobjects.Find(e => e.NetworkObjectId == networkID);
@@ -43,6 +43,10 @@ namespace MapHazardsMoves.Utils
 
                 hazardObject.detectPlayer = detectPlayer;
                 hazardObject.detectPlayer.networkId = networkID;
+
+                hazardObject.mapHazardType = mapHazardType;
+
+                hazardObject.Init();
                 
                 
                 MapHazardsMoves.instance.HazardsObjects.Add(networkID, hazardObject);
